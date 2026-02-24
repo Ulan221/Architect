@@ -1,0 +1,29 @@
+<idea-plugin>
+    <id>org.product.catalog.service.Architect</id>
+    <name>Architect</name>
+    <vendor email="zhenishbekuuluulan@gmail.com" url="https://github.com/Ulan221">Ulan Zhenishbek uulu</vendor>
+
+    <description><![CDATA[
+    Architect - Automated code generation tool. <br>
+    <em>Generate DTOs, Mappers, and Services instantly.</em>
+  ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+
+
+    <extensions defaultExtensionNs="com.intellij">
+    </extensions>
+
+    <actions>
+        <group id="Architect.MainGroup" text="Architect" popup="true">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+
+            <action id="Architect.CreateDTO"
+                    class="org.product.catalog.service.architect.CreateEntity"
+                    text="Generate Entity 🚀"
+                    description="Generate entity"/>
+        </group>
+    </actions>
+</idea-plugin>
