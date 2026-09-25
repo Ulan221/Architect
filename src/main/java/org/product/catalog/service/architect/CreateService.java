@@ -1,34 +1,36 @@
 package org.product.catalog.service.architect;
 
 import java.util.Properties;
-
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 
-public class CreateEntity extends AbstractCreateJavaFile {
+public class CreateService extends AbstractCreateJavaFile {
+    @Override
+    public String getFileNameWithSuffix(final String entityName) {
+        return entityName + "Service";
+    }
 
     @Override
     public String generateContent(final Project project, final String packageName, final String entityName) {
         try {
-            // Берем менеджер шаблонов
             final FileTemplateManager manager = FileTemplateManager.getInstance(project);
+            final FileTemplate template = manager.getInternalTemplate("Service.java");
 
-            // Ищем наш .ft файл по имени (без расширения)
-            final FileTemplate template = manager.getInternalTemplate("Entity.java");
+            final String repositoryPackage = packageName + ".repository";
 
             final String pluralName = StringUtil.pluralize(entityName);
+            final String rootLower = entityName.substring(0, 1).toLowerCase() + entityName.substring(1);
 
-            // Заполняем переменные для Velocity
             final Properties props = new Properties();
             props.setProperty("PACKAGE_NAME", packageName);
+            props.setProperty("REPOSITORY_PACKAGE", repositoryPackage);
             props.setProperty("NAME", entityName);
-            props.setProperty("TABLE_NAME", pluralName.toLowerCase());
+            props.setProperty("PLURAL_NAME", pluralName);
+            props.setProperty("ROOT_LOWER", rootLower);
 
-
-            // Рендерим текст
             return template.getText(props);
         } catch (Exception ex) {
             Messages.showErrorDialog(project, "Ошибка Velocity: " + ex.getMessage(), "Generator Error");
@@ -38,11 +40,6 @@ public class CreateEntity extends AbstractCreateJavaFile {
 
     @Override
     public String getTargetDirectoryName() {
-        return "entity";
-    }
-
-    @Override
-    public String getFileNameWithSuffix(final String entityName) {
-        return entityName;
+        return "service";
     }
 }

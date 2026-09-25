@@ -1,0 +1,54 @@
+package ${PACKAGE_NAME};
+
+import lombok.NonNull;
+import ${PACKAGE_NAME}.dto.${NAME}RequestDTO;
+import ${PACKAGE_NAME}.dto.${NAME}ResponseDTO;
+import ${PACKAGE_NAME}.entity.${NAME};
+import ${PACKAGE_NAME}.mapper.${NAME}Mapper;
+import ${REPOSITORY_PACKAGE}.${NAME}Repository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class ${NAME}Service {
+
+    private final ${NAME}Repository ${ROOT_LOWER}Repository;
+    private final ${NAME}Mapper ${ROOT_LOWER}Mapper;
+
+    public ${NAME}Service(@NonNull final ${NAME}Repository ${ROOT_LOWER}Repository,
+                          @NonNull final ${NAME}Mapper ${ROOT_LOWER}Mapper) {
+        this.${ROOT_LOWER}Repository = ${ROOT_LOWER}Repository;
+        this.${ROOT_LOWER}Mapper = ${ROOT_LOWER}Mapper;
+    }
+
+    public List<${NAME}ResponseDTO> getAll${PLURAL_NAME}() {
+        return ${ROOT_LOWER}Mapper.toDTOList(${ROOT_LOWER}Repository.findAll());
+    }
+
+    public ${NAME}ResponseDTO create${NAME}(@NonNull final ${NAME}RequestDTO ${ROOT_LOWER}RequestDTO) {
+        final ${NAME} ${ROOT_LOWER} = ${ROOT_LOWER}Repository.save(${ROOT_LOWER}Mapper.toEntity(${ROOT_LOWER}RequestDTO));
+        return ${ROOT_LOWER}Mapper.toDTO(${ROOT_LOWER});
+    }
+
+    public ${NAME}ResponseDTO getById(@NonNull final Long id) {
+        Optional<${NAME}> ${ROOT_LOWER} = ${ROOT_LOWER}Repository.findById(id);
+        return ${ROOT_LOWER}Mapper.toDTO(${ROOT_LOWER}.orElseThrow(() -> new RuntimeException("${NAME} not found with id: " + id)));
+    }
+
+    public ${NAME}ResponseDTO update${NAME}(@NonNull final Long id, @NonNull final ${NAME}RequestDTO ${ROOT_LOWER}RequestDTO) {
+        ${NAME} existing${NAME} = ${ROOT_LOWER}Repository.findById(id)
+                                                         .orElseThrow(() -> new RuntimeException("${NAME} not found with id: " + id));
+        ${ROOT_LOWER}Mapper.updateEntityFromDto(${ROOT_LOWER}RequestDTO, existing${NAME});
+        ${NAME} updated${NAME} = ${ROOT_LOWER}Repository.save(existing${NAME});
+        return ${ROOT_LOWER}Mapper.toDTO(updated${NAME});
+    }
+
+    public void delete${NAME}(@NonNull final Long id) {
+        if (!${ROOT_LOWER}Repository.existsById(id)) {
+            throw new RuntimeException("${NAME} not found with id: " + id);
+        }
+        ${ROOT_LOWER}Repository.deleteById(id);
+    }
+}

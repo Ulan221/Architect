@@ -11,19 +11,20 @@
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.java</depends>
 
-
     <extensions defaultExtensionNs="com.intellij">
+        <internalFileTemplate name="LiquibaseChangeset.xml"/>
+        <internalFileTemplate name="LiquibaseMaster.xml"/>
     </extensions>
 
     <actions>
         <group id="Architect.MainGroup" text="Architect" popup="true">
-            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
-            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last" />
+            <add-to-group group-id="EditorPopupMenu" anchor="last" />
 
-            <action id="Architect.CreateDTO"
-                    class="org.product.catalog.service.architect.CreateEntity"
-                    text="Generate Entity 🚀"
-                    description="Generate entity"/>
+            <action id="Architect.CreateEntity"
+                    class="org.product.catalog.service.architect.CreateCRUD"
+                    text="Generate CRUD 🚀"
+                    description="Generate CRUD" />
         </group>
     </actions>
 </idea-plugin>

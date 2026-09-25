@@ -8,27 +8,24 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 
-public class CreateEntity extends AbstractCreateJavaFile {
-
+public class CreateMapper extends AbstractCreateJavaFile {
     @Override
     public String generateContent(final Project project, final String packageName, final String entityName) {
         try {
-            // Берем менеджер шаблонов
             final FileTemplateManager manager = FileTemplateManager.getInstance(project);
-
-            // Ищем наш .ft файл по имени (без расширения)
-            final FileTemplate template = manager.getInternalTemplate("Entity.java");
+            final FileTemplate template = manager.getInternalTemplate("Mapper.java");
 
             final String pluralName = StringUtil.pluralize(entityName);
 
-            // Заполняем переменные для Velocity
+            final String rootLower = entityName.substring(0, 1)
+                                               .toLowerCase() + entityName.substring(1);
+
             final Properties props = new Properties();
             props.setProperty("PACKAGE_NAME", packageName);
             props.setProperty("NAME", entityName);
-            props.setProperty("TABLE_NAME", pluralName.toLowerCase());
+            props.setProperty("PLURAL_NAME", pluralName);
+            props.setProperty("ROOT_LOWER", rootLower);
 
-
-            // Рендерим текст
             return template.getText(props);
         } catch (Exception ex) {
             Messages.showErrorDialog(project, "Ошибка Velocity: " + ex.getMessage(), "Generator Error");
@@ -38,11 +35,11 @@ public class CreateEntity extends AbstractCreateJavaFile {
 
     @Override
     public String getTargetDirectoryName() {
-        return "entity";
+        return "mapper";
     }
 
     @Override
     public String getFileNameWithSuffix(final String entityName) {
-        return entityName;
+        return entityName + "Mapper";
     }
 }

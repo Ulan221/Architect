@@ -6,9 +6,8 @@ import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.text.StringUtil;
 
-public class CreateEntity extends AbstractCreateJavaFile {
+public class CreateRepository extends AbstractCreateJavaFile {
 
     @Override
     public String generateContent(final Project project, final String packageName, final String entityName) {
@@ -17,16 +16,18 @@ public class CreateEntity extends AbstractCreateJavaFile {
             final FileTemplateManager manager = FileTemplateManager.getInstance(project);
 
             // Ищем наш .ft файл по имени (без расширения)
-            final FileTemplate template = manager.getInternalTemplate("Entity.java");
+            final FileTemplate template = manager.getInternalTemplate("Repository.java");
 
-            final String pluralName = StringUtil.pluralize(entityName);
+            String entityPackage = packageName.replace(".repository", ".entity");
+            if (entityPackage.equals(packageName)) {
+                entityPackage = packageName + ".entity";
+            }
 
             // Заполняем переменные для Velocity
             final Properties props = new Properties();
             props.setProperty("PACKAGE_NAME", packageName);
+            props.setProperty("ENTITY_PACKAGE", entityPackage);
             props.setProperty("NAME", entityName);
-            props.setProperty("TABLE_NAME", pluralName.toLowerCase());
-
 
             // Рендерим текст
             return template.getText(props);
@@ -38,11 +39,11 @@ public class CreateEntity extends AbstractCreateJavaFile {
 
     @Override
     public String getTargetDirectoryName() {
-        return "entity";
+        return "repository";
     }
 
     @Override
     public String getFileNameWithSuffix(final String entityName) {
-        return entityName;
+        return entityName + "Repository";
     }
 }

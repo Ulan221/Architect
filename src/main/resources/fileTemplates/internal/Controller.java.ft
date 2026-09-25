@@ -1,0 +1,49 @@
+package ${PACKAGE_NAME};
+
+import lombok.NonNull;
+import ${PACKAGE_NAME}.dto.${NAME}ResponseDTO;
+import ${PACKAGE_NAME}.dto.${NAME}RequestDTO;
+import ${PACKAGE_NAME}.service.${NAME}Service;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/${LOW_PLURAL_NAME}")
+public class ${NAME}Controller {
+
+    private final ${NAME}Service ${ROOT_LOWER}Service;
+
+    public ${NAME}Controller(@NonNull final ${NAME}Service ${ROOT_LOWER}Service) {
+        this.${ROOT_LOWER}Service = ${ROOT_LOWER}Service;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<${NAME}ResponseDTO>> getAll${PLURAL_NAME}() {
+        return ResponseEntity.ok(${ROOT_LOWER}Service.getAll${PLURAL_NAME}());
+    }
+
+    @PostMapping
+    public ResponseEntity<${NAME}ResponseDTO> create${NAME}(@RequestBody @NonNull final ${NAME}RequestDTO ${ROOT_LOWER}RequestDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(${ROOT_LOWER}Service.create${NAME}(${ROOT_LOWER}RequestDTO));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<${NAME}ResponseDTO> get${NAME}ById(@PathVariable @NonNull final Long id) {
+        return ResponseEntity.ok(${ROOT_LOWER}Service.getById(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<${NAME}ResponseDTO> update${NAME}(@PathVariable @NonNull final Long id,
+                                                    @RequestBody @NonNull final ${NAME}RequestDTO ${ROOT_LOWER}RequestDTO) {
+        return ResponseEntity.ok(${ROOT_LOWER}Service.update${NAME}(id, ${ROOT_LOWER}RequestDTO));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete${NAME}(@PathVariable @NonNull final Long id) {
+        ${ROOT_LOWER}Service.delete${NAME}(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+}

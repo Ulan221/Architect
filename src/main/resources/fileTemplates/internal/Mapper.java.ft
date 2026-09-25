@@ -1,0 +1,18 @@
+package ${PACKAGE_NAME};
+
+
+import ${PACKAGE_NAME}.dto.${NAME}RequestDTO;
+import ${PACKAGE_NAME}.dto.${NAME}ResponseDTO;
+import ${PACKAGE_NAME}.entity.${NAME};
+import java.util.List;
+
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
+
+@Mapper(componentModel = "spring")
+public interface ${NAME}Mapper {
+    ${NAME}ResponseDTO toDTO(${NAME} ${ROOT_LOWER});
+    ${NAME} toEntity(${NAME}RequestDTO ${ROOT_LOWER}RequestDTO);
+    List<${NAME}ResponseDTO> toDTOList(List<${NAME}> entities);
+    void updateEntityFromDto(${NAME}RequestDTO ${ROOT_LOWER}RequestDTO, @MappingTarget ${NAME} ${ROOT_LOWER});
+}

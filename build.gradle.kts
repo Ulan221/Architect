@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "org.product.catalog.service"
-version = "1.0-SNAPSHOT"
+version = "1.0.0"
 
 repositories {
   mavenCentral()
@@ -34,9 +34,9 @@ tasks {
   }
 
   patchPluginXml {
-    sinceBuild.set("232")
-    untilBuild.set("242.*")
-  }
+      sinceBuild.set("232")
+      untilBuild.set("")
+    }
 
   signPlugin {
     certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))

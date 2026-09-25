@@ -1,0 +1,8 @@
+package ${PACKAGE_NAME};
+
+import java.time.LocalDateTime;
+
+public record ${NAME}ResponseDTO(
+        Long id,
+        LocalDateTime createdAt
+) {}
