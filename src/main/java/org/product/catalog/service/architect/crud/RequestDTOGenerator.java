@@ -1,4 +1,4 @@
-package org.product.catalog.service.architect;
+package org.product.catalog.service.architect.crud;
 
 import java.util.Properties;
 
@@ -7,7 +7,12 @@ import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 
-public class CreateRequestDTO extends AbstractCreateJavaFile {
+public class RequestDTOGenerator extends AbstractJavaGenerator {
+
+    public RequestDTOGenerator(final JavaFileGenerator javaFileGenerator) {
+        super(javaFileGenerator);
+    }
+
     @Override
     public String generateContent(final Project project, final String packageName, final String entityName) {
         try {
@@ -36,7 +41,7 @@ public class CreateRequestDTO extends AbstractCreateJavaFile {
     }
 
     @Override
-    public String getFileNameWithSuffix(final String entityName) {
+    public String getFileName(final String entityName) {
         return entityName + "RequestDTO";
     }
 }

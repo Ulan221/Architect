@@ -1,4 +1,4 @@
-package org.product.catalog.service.architect;
+package org.product.catalog.service.architect.docker;
 
 import org.jetbrains.annotations.NotNull;
 

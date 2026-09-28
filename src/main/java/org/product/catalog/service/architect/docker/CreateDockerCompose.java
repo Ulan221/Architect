@@ -1,8 +1,8 @@
-package org.product.catalog.service.architect;
+package org.product.catalog.service.architect.docker;
 
 import com.intellij.openapi.project.Project;
 
-public class CreateDockerCompose extends AbstractCreateRootFile{
+public class CreateDockerCompose extends AbstractCreateRootFile {
     @Override
     public String generateContent(final Project project) {
         final String dbName = project.getName().toLowerCase().replaceAll("[^a-z0-9]", "") + "_db";

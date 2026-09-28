@@ -21,8 +21,8 @@
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last" />
             <add-to-group group-id="EditorPopupMenu" anchor="last" />
 
-            <action id="Architect.CreateEntity"
-                    class="org.product.catalog.service.architect.CreateCRUD"
+            <action id="Architect.GenerateCRUD"
+                    class="org.product.catalog.service.architect.facade.GenerateTemplates"
                     text="Generate CRUD 🚀"
                     description="Generate CRUD" />
         </group>

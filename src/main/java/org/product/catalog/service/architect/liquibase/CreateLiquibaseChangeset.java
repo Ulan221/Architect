@@ -1,12 +1,7 @@
-package org.product.catalog.service.architect;
+package org.product.catalog.service.architect.liquibase;
 
-
-import groovy.util.logging.Slf4j;
 
 import java.util.Properties;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;

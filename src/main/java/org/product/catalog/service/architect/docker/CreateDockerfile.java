@@ -1,8 +1,8 @@
-package org.product.catalog.service.architect;
+package org.product.catalog.service.architect.docker;
 
 import com.intellij.openapi.project.Project;
 
-public class CreateDockerfile extends AbstractCreateRootFile{
+public class CreateDockerfile extends AbstractCreateRootFile {
 
     @Override
     public String generateContent(final Project project) {

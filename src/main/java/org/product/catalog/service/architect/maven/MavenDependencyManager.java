@@ -1,4 +1,6 @@
-package org.product.catalog.service.architect;
+package org.product.catalog.service.architect.maven;
+
+import org.product.catalog.service.architect.docker.AbstractCreateRootFile;
 
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;

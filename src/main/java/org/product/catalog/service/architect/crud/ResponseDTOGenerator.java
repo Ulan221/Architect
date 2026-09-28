@@ -1,35 +1,27 @@
-package org.product.catalog.service.architect;
+package org.product.catalog.service.architect.crud;
 
 import java.util.Properties;
+
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.text.StringUtil;
 
-public class CreateService extends AbstractCreateJavaFile {
-    @Override
-    public String getFileNameWithSuffix(final String entityName) {
-        return entityName + "Service";
+public class ResponseDTOGenerator extends AbstractJavaGenerator {
+
+    public ResponseDTOGenerator(final JavaFileGenerator javaFileGenerator) {
+        super(javaFileGenerator);
     }
 
     @Override
     public String generateContent(final Project project, final String packageName, final String entityName) {
         try {
             final FileTemplateManager manager = FileTemplateManager.getInstance(project);
-            final FileTemplate template = manager.getInternalTemplate("Service.java");
-
-            final String repositoryPackage = packageName + ".repository";
-
-            final String pluralName = StringUtil.pluralize(entityName);
-            final String rootLower = entityName.substring(0, 1).toLowerCase() + entityName.substring(1);
+            final FileTemplate template = manager.getInternalTemplate("ResponseDTO.java");
 
             final Properties props = new Properties();
             props.setProperty("PACKAGE_NAME", packageName);
-            props.setProperty("REPOSITORY_PACKAGE", repositoryPackage);
             props.setProperty("NAME", entityName);
-            props.setProperty("PLURAL_NAME", pluralName);
-            props.setProperty("ROOT_LOWER", rootLower);
 
             return template.getText(props);
         } catch (Exception ex) {
@@ -40,6 +32,11 @@ public class CreateService extends AbstractCreateJavaFile {
 
     @Override
     public String getTargetDirectoryName() {
-        return "service";
+        return "dto";
+    }
+
+    @Override
+    public String getFileName(final String entityName) {
+        return entityName + "ResponseDTO";
     }
 }

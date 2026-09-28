@@ -1,4 +1,4 @@
-package org.product.catalog.service.architect;
+package org.product.catalog.service.architect.crud;
 
 import java.util.Properties;
 
@@ -6,30 +6,32 @@ import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.text.StringUtil;
 
-public class CreateRepository extends AbstractCreateJavaFile {
+public class ServiceGenerator extends AbstractJavaGenerator {
+
+    public ServiceGenerator(final JavaFileGenerator javaFileGenerator) {
+        super(javaFileGenerator);
+    }
 
     @Override
     public String generateContent(final Project project, final String packageName, final String entityName) {
         try {
-            // Берем менеджер шаблонов
             final FileTemplateManager manager = FileTemplateManager.getInstance(project);
+            final FileTemplate template = manager.getInternalTemplate("Service.java");
 
-            // Ищем наш .ft файл по имени (без расширения)
-            final FileTemplate template = manager.getInternalTemplate("Repository.java");
+            final String repositoryPackage = packageName + ".repository";
 
-            String entityPackage = packageName.replace(".repository", ".entity");
-            if (entityPackage.equals(packageName)) {
-                entityPackage = packageName + ".entity";
-            }
+            final String pluralName = StringUtil.pluralize(entityName);
+            final String rootLower = entityName.substring(0, 1).toLowerCase() + entityName.substring(1);
 
-            // Заполняем переменные для Velocity
             final Properties props = new Properties();
             props.setProperty("PACKAGE_NAME", packageName);
-            props.setProperty("ENTITY_PACKAGE", entityPackage);
+            props.setProperty("REPOSITORY_PACKAGE", repositoryPackage);
             props.setProperty("NAME", entityName);
+            props.setProperty("PLURAL_NAME", pluralName);
+            props.setProperty("ROOT_LOWER", rootLower);
 
-            // Рендерим текст
             return template.getText(props);
         } catch (Exception ex) {
             Messages.showErrorDialog(project, "Ошибка Velocity: " + ex.getMessage(), "Generator Error");
@@ -39,11 +41,11 @@ public class CreateRepository extends AbstractCreateJavaFile {
 
     @Override
     public String getTargetDirectoryName() {
-        return "repository";
+        return "service";
     }
 
     @Override
-    public String getFileNameWithSuffix(final String entityName) {
-        return entityName + "Repository";
+    public String getFileName(final String entityName) {
+        return entityName + "Service";
     }
 }

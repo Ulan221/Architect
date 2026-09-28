@@ -1,4 +1,4 @@
-package org.product.catalog.service.architect;
+package org.product.catalog.service.architect.crud;
 
 import java.util.Properties;
 
@@ -8,23 +8,24 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 
-public class CreateMapper extends AbstractCreateJavaFile {
+public class EntityGenerator extends AbstractJavaGenerator {
+
+    public EntityGenerator(final JavaFileGenerator javaFileGenerator) {
+        super(javaFileGenerator);
+    }
+
     @Override
     public String generateContent(final Project project, final String packageName, final String entityName) {
         try {
             final FileTemplateManager manager = FileTemplateManager.getInstance(project);
-            final FileTemplate template = manager.getInternalTemplate("Mapper.java");
+            final FileTemplate template = manager.getInternalTemplate("Entity.java");
 
             final String pluralName = StringUtil.pluralize(entityName);
-
-            final String rootLower = entityName.substring(0, 1)
-                                               .toLowerCase() + entityName.substring(1);
 
             final Properties props = new Properties();
             props.setProperty("PACKAGE_NAME", packageName);
             props.setProperty("NAME", entityName);
-            props.setProperty("PLURAL_NAME", pluralName);
-            props.setProperty("ROOT_LOWER", rootLower);
+            props.setProperty("TABLE_NAME", pluralName.toLowerCase());
 
             return template.getText(props);
         } catch (Exception ex) {
@@ -35,11 +36,11 @@ public class CreateMapper extends AbstractCreateJavaFile {
 
     @Override
     public String getTargetDirectoryName() {
-        return "mapper";
+        return "entity";
     }
 
     @Override
-    public String getFileNameWithSuffix(final String entityName) {
-        return entityName + "Mapper";
+    public String getFileName(final String entityName) {
+        return entityName;
     }
 }
