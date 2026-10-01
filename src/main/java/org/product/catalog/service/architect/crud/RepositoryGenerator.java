@@ -2,10 +2,11 @@ package org.product.catalog.service.architect.crud;
 
 import java.util.Properties;
 
+import org.product.catalog.service.architect.exceptions.TemplateGenerationException;
+
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
 
 public class RepositoryGenerator extends AbstractJavaGenerator {
 
@@ -14,7 +15,8 @@ public class RepositoryGenerator extends AbstractJavaGenerator {
     }
 
     @Override
-    public String generateContent(final Project project, final String packageName, final String entityName) {
+    public String generateContent(final Project project, final String packageName, final String entityName)
+            throws TemplateGenerationException {
         try {
             final FileTemplateManager manager = FileTemplateManager.getInstance(project);
             final FileTemplate template = manager.getInternalTemplate("Repository.java");
@@ -31,8 +33,7 @@ public class RepositoryGenerator extends AbstractJavaGenerator {
 
             return template.getText(props);
         } catch (Exception ex) {
-            Messages.showErrorDialog(project, "Ошибка Velocity: " + ex.getMessage(), "Generator Error");
-            return null;
+            throw new TemplateGenerationException(ex.getMessage(), ex);
         }
     }
 

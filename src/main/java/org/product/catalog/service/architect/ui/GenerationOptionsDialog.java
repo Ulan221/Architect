@@ -38,7 +38,7 @@ public class GenerationOptionsDialog extends DialogWrapper {
         return jPanel;
     }
 
-    public boolean isGenerateLiquiBase() {
+    public boolean isGenerateLiquibase() {
         return liquibaseCheckBox.isSelected();
     }
 

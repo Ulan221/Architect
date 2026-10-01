@@ -32,13 +32,11 @@ public class CreateLiquibaseChangeset extends AbstractCreateXmlFile {
             final String pluralName = StringUtil.pluralize(entityName);
             final String lowPluralName = pluralName.toLowerCase();
 
-            // Заполняем переменные для Velocity
             final Properties props = new Properties();
             props.setProperty("NAME", entityName);
             props.setProperty("PLURAL_NAME", pluralName);
             props.setProperty("LOW_PLURAL_NAME", lowPluralName);
 
-            // Рендерим текст
             return template.getText(props);
         } catch (Exception ex) {
             Messages.showErrorDialog(project, "Ошибка Velocity: " + ex.getMessage(), "Generator Error");

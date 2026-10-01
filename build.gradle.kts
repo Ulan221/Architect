@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "org.product.catalog.service"
-version = "1.0.0"
+version = "1.1.0"
 
 repositories {
   mavenCentral()
@@ -13,10 +13,11 @@ repositories {
 
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
+
 intellij {
-  version.set("2023.2.5")
-  type.set("IC") // Target IDE Platform
-  plugins.set(listOf("java"))
+    version.set("2023.2.5")
+    type.set("IC")
+    plugins.set(listOf("java", "org.jetbrains.idea.maven"))
 }
 
 tasks.withType<JavaCompile> {

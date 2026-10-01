@@ -6,14 +6,15 @@ import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.Computable;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
-import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 
 public abstract class AbstractCreateXmlFile extends AnAction {
@@ -30,7 +31,6 @@ public abstract class AbstractCreateXmlFile extends AnAction {
             return;
         }
 
-        // Спрашиваем имя файла
         final String fileName = Messages.showInputDialog(project, "Please input file name:", "Architect", Messages.getQuestionIcon());
         if (fileName == null || fileName.isEmpty()) {
             return;
@@ -41,13 +41,12 @@ public abstract class AbstractCreateXmlFile extends AnAction {
     }
 
     public void runGeneration(final Project project, final PsiDirectory psiDirectory, final String entityName) {
-        // 2. Генерируем контент через Velocity
-        final String content = generateContent(project, entityName);
+        final String content = ReadAction.compute(() -> generateContent(project, entityName));
+
         if (content == null) {
             return;
         }
 
-        // 3. Создаем файл
         WriteCommandAction.runWriteCommandAction(project, () -> {
             final PsiFileFactory fileFactory = PsiFileFactory.getInstance(project);
             final String realFileName = getFileNameWithSuffix(entityName);
@@ -60,7 +59,9 @@ public abstract class AbstractCreateXmlFile extends AnAction {
             final String[] targetDirs = getTargetDirectoryName().split("/");
 
             for (String dirName : targetDirs) {
-                if (dirName.isBlank()) continue;
+                if (dirName.isBlank()) {
+                    continue;
+                }
 
                 PsiDirectory subDir = currentDir.findSubdirectory(dirName);
                 if (subDir == null) {
@@ -84,13 +85,29 @@ public abstract class AbstractCreateXmlFile extends AnAction {
     public abstract String generateContent(Project project, String fileName);
 
     public static PsiDirectory getTargetDirectory(final AnActionEvent e) {
+
+        final PsiDirectory finalDir = ReadAction.compute(() -> validateDirectory(e));
+
+        if (finalDir != null) {
+            PsiDirectory resourcesDir = ReadAction.compute(() -> finalDir.findSubdirectory("resources"));
+
+            if (resourcesDir == null) {
+                resourcesDir = WriteCommandAction.runWriteCommandAction(e.getProject(),
+                                                                        (Computable<PsiDirectory>) () -> finalDir.createSubdirectory(
+                                                                                "resources"));
+            }
+            return resourcesDir;
+        }
+
+        return null;
+    }
+
+    private static PsiDirectory validateDirectory(final AnActionEvent e) {
         final Object data = e.getData(CommonDataKeys.PSI_ELEMENT);
 
         PsiDirectory currentDir = null;
         if (data instanceof PsiDirectory dir) {
             currentDir = dir;
-        } else if (data instanceof PsiJavaFile file) {
-            currentDir = file.getContainingDirectory();
         }
 
         if (currentDir == null) {
@@ -101,15 +118,6 @@ public abstract class AbstractCreateXmlFile extends AnAction {
         while (mainDir != null && !"main".equals(mainDir.getName())) {
             mainDir = mainDir.getParentDirectory();
         }
-
-        if (mainDir != null) {
-            PsiDirectory resourcesDir = mainDir.findSubdirectory("resources");
-            if (resourcesDir == null) {
-                resourcesDir = mainDir.createSubdirectory("resources");
-            }
-            return resourcesDir;
-        }
-
-        return null;
+        return mainDir;
     }
 }

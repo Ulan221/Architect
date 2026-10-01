@@ -2,10 +2,11 @@ package org.product.catalog.service.architect.crud;
 
 import java.util.Properties;
 
+import org.product.catalog.service.architect.exceptions.TemplateGenerationException;
+
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 
 public class ControllerGenerator extends AbstractJavaGenerator {
@@ -15,14 +16,15 @@ public class ControllerGenerator extends AbstractJavaGenerator {
     }
 
     @Override
-    public String generateContent(final Project project, final String packageName, final String entityName) {
+    public String generateContent(final Project project, final String packageName, final String entityName)
+            throws TemplateGenerationException {
         try {
             final FileTemplateManager manager = FileTemplateManager.getInstance(project);
 
             final FileTemplate template = manager.getInternalTemplate("Controller.java");
 
             final String servicePackage = packageName + ".service";
-            final String rootLower = entityName.substring(0, 1).toLowerCase() + entityName.substring(1);
+            final String rootLower = StringUtil.decapitalize(entityName);
             final String pluralName = StringUtil.pluralize(entityName);
             final String lowPluralName = pluralName.toLowerCase();
 
@@ -36,11 +38,9 @@ public class ControllerGenerator extends AbstractJavaGenerator {
 
             return template.getText(props);
         } catch (Exception ex) {
-            Messages.showErrorDialog(project, "Ошибка Velocity: " + ex.getMessage(), "Generator Error");
-            return null;
+            throw new TemplateGenerationException(ex.getMessage(), ex);
         }
     }
-
 
     @Override
     public String getTargetDirectoryName() {
